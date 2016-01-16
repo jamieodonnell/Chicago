@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chicago Homicides</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+		<link rel="stylesheet" type="text/css" href="css/own_style.css">
+		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+		<script src="js/leaflet-hash.js"></script>
+		<script src="js/Autolinker.min.js"></script>
+	</head>
+	<body>
+		<div id ="container">
+		<div id="header">
+		<center>
+		<br><font color="black", size = 20>Chicago's History of Homicide</font></b><br>
+        <HR WIDTH="100%" Color = black>
+
+        <font color = black>This map visualises the type of attack for all global terrorist incidents between 1970 - 2014. Click on the type of attack in the top right to change between types and on countries to get a national summary.</font>
+        <HR WIDTH="100%" Color = black>
+        <font size= 3, color = black> Data courtesy of the Global Terrorism Database found at http://www.start.umd.edu/gtd/ <br><br>
+		
+		</center>
+		</div>
+		</div>
+		<style>
+		.custom .leaflet-popup-tip,
+		.custom .leaflet-popup-content-wrapper {
+			background: #e93434;
+			color: #ffffff;
+		}
+		</style>
+		<div class ='custom-popup' id="map">
+		<script src="data/exp_COmArea.js"></script>
+		<script>
+		var map = L.map('map').setView([41.85,-87.68],10);
+		
+
+		var hash = new L.Hash(map);
+		var additional_attrib = 'created w. <a href="https://github.com/geolicious/qgis2leaf" target ="_blank">qgis2leaf</a> by <a href="http://www.geolicious.de" target ="_blank">Geolicious</a> & contributors<br>';
+		
+		var basemap_0 =  L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+			subdomains: 'abcd'
+		
+		});
+			
+		basemap_0.addTo(map)
+		
+		function pop_COmArea(feature, layer) {                  
+            var popupContent = '<b>' + feature.properties.community + '<p>1965___________________________________________1995</b><img src="' + feature.properties.Directory + '" />' 
+            layer.bindPopup(popupContent, {
+				minWidth:344
+
+			}); 
+        }
+		
+
+
+
+
+		function doStyleCOmArea(feature) {
+			if (feature.properties.Total >= 2.0 && feature.properties.Total <= 143.0) {
+				return {
+					color: '#000000',
+					weight: '0.65',
+					fillColor: '#feebe2',
+					opacity: '1.0',
+					fillOpacity: '0.7',
+				}
+			}
+			if (feature.properties.Total >= 143.0 && feature.properties.Total <= 369.0) {
+				return {
+					color: '#000000',
+					weight: '0.65',
+					fillColor: '#fbbfc1',
+					opacity: '1.0',
+					fillOpacity: '0.7',
+				}
+			}
+			if (feature.properties.Total >= 369.0 && feature.properties.Total <= 548.0) {
+				return {
+					color: '#000000',
+					weight: '0.65',
+					fillColor: '#f886aa',
+					opacity: '1.0',
+					fillOpacity: '0.7',
+				}
+			}
+			if (feature.properties.Total >= 548.0 && feature.properties.Total <= 826.0) {
+				return {
+					color: '#000000',
+					weight: '0.65',
+					fillColor: '#e34997',
+					opacity: '1.0',
+					fillOpacity: '0.7',
+				}
+			}
+			if (feature.properties.Total >= 826.0 && feature.properties.Total <= 1155.0) {
+				return {
+					color: '#000000',
+					weight: '0.65',
+					fillColor: '#b61586',
+					opacity: '1.0',
+					fillOpacity: '0.7',
+				}
+			}
+			if (feature.properties.Total >= 1155.0 && feature.properties.Total <= 1445.0) {
+				return {
+					color: '#000000',
+					weight: '0.65',
+					fillColor: '#7a0177',
+					opacity: '1.0',
+					fillOpacity: '0.7',
+				}
+			}
+		}
+		var exp_COmAreaJSON = new L.geoJson(exp_COmArea,{
+			onEachFeature: pop_COmArea,
+			style: doStyleCOmArea
+		});
+		exp_COmAreaJSON.addTo(map)
+		var title = new L.Control();
+		title.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info');
+			this.update();
+			return this._div;
+		};
+		title.update = function () {
+			this._div.innerHTML = '<h2></h2>'
+		};
+		title.addTo(map);
+
+	</script>
+	</div>
+</body>
+
+
+</html>
