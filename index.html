@@ -9,6 +9,29 @@
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
 		<script src="js/leaflet-hash.js"></script>
 		<script src="js/Autolinker.min.js"></script>
+		<style>
+
+		.custom-popup .leaflet-popup-content-wrapper {
+		  background:#000000;
+		  color:#fff;
+		  font-size:16px;
+		  line-height:24px;
+		  border-radius:0 !important;
+		  }
+		.custom-popup .leaflet-popup-content-wrapper a {
+		  color:rgba(0,0,0,0.5);
+		  }
+		.custom-popup .leaflet-popup-tip-container {
+		  width:30px;
+		  height:15px;
+		  }
+		.leaflet-control-layers-expanded { background: #242426;
+			color: white;
+			border-radius:0 !important;
+			font-family: 'Ubuntu';
+			}
+		</style>
+
 	</head>
 	<body>
 		<div id ="container">
@@ -17,9 +40,9 @@
 		<br><font color="black", size = 20>Chicago's History of Homicide</font></b><br>
         <HR WIDTH="100%" Color = black>
 
-        <font color = black>This map visualises the type of attack for all global terrorist incidents between 1970 - 2014. Click on the type of attack in the top right to change between types and on countries to get a national summary.</font>
+        <font color = black>Homicide rates in Chicago are currently some of the worst in the United States. This map takes a historical view of the years 1964 and 1995 in which some of the worst gang related violence plagued the city. Click on a neighborhood to see how the Homicide rate changed over the years and toggle the Poverty layer to see how it relates. </font>
         <HR WIDTH="100%" Color = black>
-        <font size= 3, color = black> Data courtesy of the Global Terrorism Database found at http://www.start.umd.edu/gtd/ <br><br>
+        Data courtesy of the Inter-University Consortium For Political and Social Research (ICPSR 6399)<br><br>
 		
 		</center>
 		</div>
@@ -45,11 +68,23 @@
 			subdomains: 'abcd'
 		
 		});
+		
 			
 		basemap_0.addTo(map)
+		var Legend = L.control({position: 'bottomright'});
+		Legend.onAdd = function(map) {
+			var div = L.DomUtil.create('div', 'info legend');
+            div.innerHTML += "<iframe src='"+ "http://i.imgur.com/8tpPnlD.png" +"' width='123' height='300' frameborder='0'></iframe>"
+        return div;
+        };
+
+		
+		Legend.addTo(map);
+		
+		
 		
 		function pop_COmArea(feature, layer) {                  
-            var popupContent = '<b>' + feature.properties.community + '<p>1965___________________________________________1995</b><img src="' + feature.properties.Directory + '" />' 
+            var popupContent = '<b><div align = "center">' + feature.properties.community + '<p><img src="' + feature.properties.Directory + '" />' + '<img src="images/scalebar.jpg">' + '<div font-size="16" align="left">' + feature.properties.Total + ' total Homicides from 1964-1995<p>' + 'The worst year for Homicides was ' + feature.properties.CheeseMaxYear + ' in which ' + feature.properties.MaxNum + ' people were killed.' 
             layer.bindPopup(popupContent, {
 				minWidth:344
 
@@ -58,7 +93,7 @@
 		
 
 
-
+		
 
 		function doStyleCOmArea(feature) {
 			if (feature.properties.Total >= 2.0 && feature.properties.Total <= 143.0) {
@@ -116,21 +151,83 @@
 				}
 			}
 		}
+
+		
+		function doStyleCOmPoverty(feature) {
+			if (feature.properties.Poverty >= 2.0 && feature.properties.Poverty <= 15.0) {
+				return {
+					color: '#000000',
+					weight: '0.65',
+					fillColor: '#feebe2',
+					opacity: '1.0',
+					fillOpacity: '0.7',
+				}
+			}
+			if (feature.properties.Poverty >= 15.0 && feature.properties.Poverty <= 26.0) {
+				return {
+					color: '#000000',
+					weight: '0.65',
+					fillColor: '#fbbfc1',
+					opacity: '1.0',
+					fillOpacity: '0.7',
+				}
+			}
+			if (feature.properties.Poverty >= 26.0 && feature.properties.Poverty <= 34.0) {
+				return {
+					color: '#000000',
+					weight: '0.65',
+					fillColor: '#f886aa',
+					opacity: '1.0',
+					fillOpacity: '0.7',
+				}
+			}
+			if (feature.properties.Poverty >= 34.0 && feature.properties.Poverty <= 41.0) {
+				return {
+					color: '#000000',
+					weight: '0.65',
+					fillColor: '#e34997',
+					opacity: '1.0',
+					fillOpacity: '0.7',
+				}
+			}
+			if (feature.properties.Poverty >= 41.0 && feature.properties.Poverty <= 50.0) {
+				return {
+					color: '#000000',
+					weight: '0.65',
+					fillColor: '#b61586',
+					opacity: '1.0',
+					fillOpacity: '0.7',
+				}
+			}
+			if (feature.properties.Poverty >= 50.0 && feature.properties.Poverty <= 66.0) {
+				return {
+					color: '#000000',
+					weight: '0.65',
+					fillColor: '#7a0177',
+					opacity: '1.0',
+					fillOpacity: '0.7',
+				}
+			}
+		}
+		var Povertylayer = new L.geoJson(exp_COmArea,{
+			onEachFeature: pop_COmArea,
+			style: doStyleCOmPoverty
+		});
 		var exp_COmAreaJSON = new L.geoJson(exp_COmArea,{
 			onEachFeature: pop_COmArea,
 			style: doStyleCOmArea
 		});
+		
 		exp_COmAreaJSON.addTo(map)
-		var title = new L.Control();
-		title.onAdd = function (map) {
-			this._div = L.DomUtil.create('div', 'info');
-			this.update();
-			return this._div;
-		};
-		title.update = function () {
-			this._div.innerHTML = '<h2></h2>'
-		};
-		title.addTo(map);
+		
+		var Baselayers  = {
+			"Poverty": Povertylayer,
+            "Homicides": exp_COmAreaJSON
+		}
+		
+        L.control.layers(Baselayers,null,{collapsed:false}).addTo(map);
+		
+		
 
 	</script>
 	</div>
