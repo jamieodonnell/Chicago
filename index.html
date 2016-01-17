@@ -85,7 +85,7 @@
 		
 		
 		function pop_COmArea(feature, layer) {                  
-            var popupContent = '<b><div align = "center">' + feature.properties.community + '<p><img src="' + feature.properties.Directory + '" />' + '<img src="images/scalebar.jpg">' + '<div font-size="16" align="left">' + feature.properties.Total + ' total Homicides from 1964-1995<p>' + 'The worst year for Homicides was ' + feature.properties.CheeseMaxYear + ' in which ' + feature.properties.MaxNum + ' people were killed.' 
+            var popupContent = '<b><div align = "center">' + feature.properties.community + '<p><img src="' + feature.properties.Directory + '" />' + '<img src="images/scalebar.jpg">' + '<div font-size="16" align="left">' + feature.properties.Total + ' total Homicides from 1964-1995<p>' + 'The worst being ' + feature.properties.CheeseMaxYear + ' in which ' + feature.properties.MaxNum + ' people were killed.' 
             layer.bindPopup(popupContent, {
 				minWidth:344
 
